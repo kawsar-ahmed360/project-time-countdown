@@ -1,0 +1,62 @@
+class OfferController extends Controller
+{
+    public function index()
+    {
+        // Define the start and end dates and times for the offer
+        $startDate = new DateTime('2023-02-11 10:00:00');
+        $endDate = new DateTime('2023-02-12 18:00:00');
+        $currentDate = new DateTime();
+
+        // Calculate the time remaining for the offer
+        $timeRemaining = $endDate->getTimestamp() - $currentDate->getTimestamp();
+
+        // Check if the current date and time is within the offer period
+        if ($currentDate >= $startDate && $currentDate <= $endDate) {
+            return view('offers.index', [
+                'offer' => 'Get 50% off on all products!',
+                'time_remaining' => $timeRemaining,
+            ]);
+        } else {
+            return view('offers.index', [
+                'offer' => 'No current offers',
+                'time_remaining' => $timeRemaining,
+            ]);
+        }
+    }
+}
+
+
+//-----------------------------Blade File-------------------
+
+<h2>{{ $offer }}</h2>
+
+@if ($offer == 'Get 50% off on all products!')
+    <p>Offer ends in:</p>
+    <p id="countdown-timer">{{ gmdate("H:i:s", $timeRemaining) }}</p>
+    <script>
+        // Update the countdown timer every second
+        setInterval(function() {
+            var timer = document.getElementById("countdown-timer").innerHTML;
+            var parts = timer.split(":");
+            var hours = parseInt(parts[0], 10);
+            var minutes = parseInt(parts[1], 10);
+            var seconds = parseInt(parts[2], 10);
+            seconds--;
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+            }
+            if (minutes < 0) {
+                minutes = 59;
+                hours--;
+            }
+            document.getElementById("countdown-timer").innerHTML =
+                (hours < 10 ? "0" + hours : hours) +
+                ":" +
+                (minutes < 10 ? "0" + minutes : minutes) +
+                ":" +
+                (seconds < 10 ? "0" + seconds : seconds);
+        }, 1000);
+    </script>
+@else
+    <p>{{ $offer }}
