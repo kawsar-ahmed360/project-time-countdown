@@ -60,3 +60,46 @@ class OfferController extends Controller
     </script>
 @else
     <p>{{ $offer }}
+
+
+
+
+
+<!-- resources/views/offers/index.blade.php -->
+
+<div class="offer-countdown">
+    <p>Offer starts in:</p>
+    <div id="countdown"></div>
+</div>
+
+<script>
+    // Set the offer start and end dates and times
+    var offerStart = new Date("{{ $start_date }}").getTime();
+    var offerEnd = new Date("{{ $end_date }}").getTime();
+    var now = new Date("{{ $current_date }}").getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        // Get the current date and time
+        now = new Date().getTime();
+
+        // Calculate the distance between the current date and time and the offer start date and time
+        var distance = offerStart - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the countdown
+        document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+        // If the offer has started, clear the interval and display a message
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdown").innerHTML = "Offer has started!";
+        }
+    }, 1000);
+</script>
